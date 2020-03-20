@@ -46,7 +46,9 @@ def most_common_word(url):
     # r comes from the requests request above
     soup = BeautifulSoup(r.text, 'lxml')
 
-    # find all anchor tags with the class of "DYST1d"
+    # find all anchor tags with the class of "DYST1d".
+    # The anchore tag with this tag contains
+    # the news article headline and link
     anchor = soup.findAll("a", {"class": "DY5T1d"})
 
     words = []
