@@ -40,29 +40,14 @@ ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and',
 
 isascii = lambda s: len(s) == len(s.encode())
 
-
-def get_user_input():
-    print('''
-How many of the most common words would you like to see?
-(please enter a whole number)''')
-    number_of_words = int(input('>>>'))
-    print('''
-How many times must a word appear to be included in the results?
-(please enter a whole number)''')
-    min_number_of_appearances = int(input('min num of appearances:'))
-    return {'number_of_words': number_of_words,
-            'min_number_of_appearances': min_number_of_appearances}
-
  
-def most_common_word(url: str, 
-                    number_of_words: int, 
-                    min_number_of_appearances: int) -> None:
+def word_count():
     """
     This function takes a url as the argument
     and returns the most common word found in that web page
     """
     # "load" a webpage 
-    r = requests.get(url)
+    r = requests.get('https://news.google.com/')
 
     # decode the text of the HTML.
     # r comes from the requests request above
@@ -101,17 +86,15 @@ def most_common_word(url: str,
                 isascii(word) == True):
                 words_list.append(word.lower())
 
-    for word in list(set(words_list)):
-        most_common_word = max(set(words_list), key = words_list.count)
-        number_of_appearances =  words_list.count(most_common_word)
-        if number_of_appearances >= min_number_of_appearances:
-            results[most_common_word] = number_of_appearances
-        words_list = list(filter((most_common_word).__ne__, words_list))
+    counter = 1
+    for i in list(set(words_list)):
+        word = max(set(words_list), key = words_list.count)
+        number_of_appearances =  words_list.count(word)
+        results[counter] = {'word':word, 'appearances':number_of_appearances}
+        counter += 1
+        words_list = list(filter((word).__ne__, words_list))
 
-    if not results:
-        return None 
-    else:
-        return results
+    return results
 
 
    
@@ -122,41 +105,11 @@ Hello and welcom to the most common word program.
 This program returns the most common words found on the Google New website.
 Created by Michael Delgado (devmikedel@gmail.com)''')
 
-    run = True
-    while run:
-        user_input = get_user_input()
-        results = most_common_word('https://news.google.com/', 
-                                user_input['number_of_words'], 
-                                user_input['min_number_of_appearances'])
-        if results != None:
-            print('\n')
-            if user_input['number_of_words'] <= len(results.keys()):
-                for i in range(user_input['number_of_words']):
-                    word = list(results.keys())[i] 
-                    appearances = results[word]
-                    print(f'{i+1}. "{word}" appears {appearances} times.')
-            else:
-                print(f'''
-There are not enough results to meet your number of words.
-Here are the {len(results.keys())} results that were returned.''')
-                for i in range(len(results.keys())):
-                    word = list(results.keys())[i] 
-                    appearances = results[word]
-                    print(f'{i+1}. "{word}" appears {appearances} times.')
-            
-        else:
-            print(f'''
-The are no words that meet your minimum number of appearances ({user_input['min_number_of_appearances']})''')
+    results = word_count()
 
-        user_input = input('''
-Would you like to continue?
-(enter "yes" or "no")
->>>''')
+    for result in results:
+        print(f'{results[result]}')
 
-        if user_input.lower() in ['yes', 'ye', 'y', 'yeah', 'yup',]:
-            continue
-        else:
-            run = False
 
 if __name__ == '__main__':
     main()
