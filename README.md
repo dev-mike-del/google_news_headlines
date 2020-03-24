@@ -27,7 +27,7 @@ edit autoexec.bat
 
 Everytime this script is executed, it creates a new results list.
 
-1. Create a python virtual environment. For this example, I am using [Virtualenv][https://virtualenv.pypa.io/en/latest].
+1. Create a python virtual environment. For this example, I am using [Virtualenv](https://virtualenv.pypa.io/en/latest).
 ```sh
 virtualenv -p python3 your_virtualenv_name
 ```
