@@ -101,9 +101,13 @@ def word_count():
 def main():
 
     print('''
-Hello and welcom to the most common word program. 
-This program returns the most common words found on the Google New website.
-Created by Michael Delgado (devmikedel@gmail.com)''')
+Hello and welcom to the Google News word count. 
+This program returns the word count of all the words 
+found on the Google New website.
+
+Created by Michael Delgado (devmikedel@gmail.com)
+
+(Please wait for the results)''')
 
     results = word_count()
 
