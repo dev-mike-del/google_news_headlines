@@ -130,14 +130,15 @@ Created by Michael Delgado (devmikedel@gmail.com)''')
                                 user_input['min_number_of_appearances'])
         if results != None:
             print('\n')
-            try:
+            if user_input['number_of_words'] <= len(results.keys()):
                 for i in range(user_input['number_of_words']):
                     word = list(results.keys())[i] 
                     appearances = results[word]
                     print(f'{i+1}. "{word}" appears {appearances} times.')
-            except IndexError:
-                print('''
-There are not enough results to meet your number of words.''')
+            else:
+                print(f'''
+There are not enough results to meet your number of words.
+Here are the {len(results.keys())} results that were returned.''')
                 for i in range(len(results.keys())):
                     word = list(results.keys())[i] 
                     appearances = results[word]
