@@ -22,19 +22,41 @@ import requests
 import lxml
 
 
-alphabet_list = [' ','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
+alphabet_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
             'q','r','s','t','u','v','w','x','y','z']
 
 string_numbers_list = ['0','1','2','3','4','5','6','7','8','9']
 
 punctuation_list = ['.', ',', '!', '?', ';', ':', '"', '\'', '[', ']', '{', '}',
-               '\\', '|', '=', '+', '-', '(', ')', '*', '~']
+               '\\', '|', '=', '+', '‒', '–', '—', '―', '(', ')', '*', '~', '&']
 
-ignore_word_list = ['a', 'and', 'if', 'is', 'to', 'be', 'can', 'not', 'the']
+ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and', 
+                    'are', 'as', 'at', 'be', 'but', 'by', 'can', 'could', 
+                    'during', 'for', 'from', 'get', 'gets', 'has', 'have', 
+                    'he', 'his', 'how', 'if', 'in', 'is', 'it', 'it\'s', 
+                    'new', 'news', 'not', 'of', 'on', 'or', 'out', 'says', 
+                    'takes', 'than', 'that', 'the', 'this', 'to', 'was', 
+                    'will', 'what', 'when', 'with', 'who', 'why', 'won\'t',]
 
-output = []
+isascii = lambda s: len(s) == len(s.encode())
+
+
+def get_user_input():
+    print('''
+How many of the most common words would you like to see?
+(please enter a whole number)''')
+    number_of_words = int(input('>>>'))
+    print('''
+How many times must a word appear to be included in the results?
+(please enter a whole number)''')
+    min_number_of_appearances = int(input('min num of appearances:'))
+    return {'number_of_words': number_of_words,
+            'min_number_of_appearances': min_number_of_appearances}
+
  
-def most_common_word(url):
+def most_common_word(url: str, 
+                    number_of_words: int, 
+                    min_number_of_appearances: int) -> None:
     """
     This function takes a url as the argument
     and returns the most common word found in that web page
@@ -51,24 +73,89 @@ def most_common_word(url):
     # the news article headline and link
     anchor = soup.findAll("a", {"class": "DY5T1d"})
 
-    words = []
-    # results = {}
-    # counter = 0
+    words_list = []
+    results = {}
 
+    # This extracts the individual anchor tags from the BeautifulSoup element 
+    # of anchor tags
     for obj in anchor:
-        for obj_text in obj:
-            for obj_word in obj_text.split():
-                if obj_word not in ignore_word_list:
-                    words.append(obj_word)
+        # This extracts the text from the anchor tag
+        for word in obj.text.split():
+            word = word.lower()
+            # This check if the first letter of the word is in the 
+            # punctuation_list. If it is, the function replaces the letter 
+            # with an empty string (that we later remove).
+            if word[0] in punctuation_list:
+                word = word.replace(word[0], '')
+            # This check if the last letter of the word is in the 
+            # punctuation_list. If it is, the function replaces the letter 
+            # with an empty string (that we later remove).
+            elif word[-1] in punctuation_list:
+                word = word.replace(word[-1], '')
+            # This check if the word is in the ignore_word_list. If it's not,
+            # it is added to word_list.
+            if (word not in ignore_word_list and
+                word not in punctuation_list and 
+                word not in alphabet_list and 
+                word not in string_numbers_list and
+                isascii(word) == True):
+                words_list.append(word.lower())
 
-        
-    most_common_word = max(set(words), key = words.count)
-    number_of_appearances =  words.count(most_common_word)
+    for word in list(set(words_list)):
+        most_common_word = max(set(words_list), key = words_list.count)
+        number_of_appearances =  words_list.count(most_common_word)
+        if number_of_appearances >= min_number_of_appearances:
+            results[most_common_word] = number_of_appearances
+        words_list = list(filter((most_common_word).__ne__, words_list))
 
-    return f'The most common word is "{most_common_word}". It appears {number_of_appearances} times.'
+    if not results:
+        return None 
+    else:
+        return results
 
+
+   
 def main():
-    print(most_common_word('https://news.google.com/'))
+
+    print('''
+Hello and welcom to the most common word program. 
+This program returns the most common words found on the Google New website.
+Created by Michael Delgado (devmikedel@gmail.com)''')
+
+    run = True
+    while run:
+        user_input = get_user_input()
+        results = most_common_word('https://news.google.com/', 
+                                user_input['number_of_words'], 
+                                user_input['min_number_of_appearances'])
+        if results != None:
+            print('\n')
+            try:
+                for i in range(user_input['number_of_words']):
+                    word = list(results.keys())[i] 
+                    appearances = results[word]
+                    print(f'{i+1}. "{word}" appears {appearances} times.')
+            except IndexError:
+                print('''
+There are not enough results to meet your number of words.''')
+                for i in range(len(results.keys())):
+                    word = list(results.keys())[i] 
+                    appearances = results[word]
+                    print(f'{i+1}. "{word}" appears {appearances} times.')
+            
+        else:
+            print(f'''
+The are no words that meet your minimum number of appearances ({user_input['min_number_of_appearances']})''')
+
+        user_input = input('''
+Would you like to continue?
+(enter "yes" or "no")
+>>>''')
+
+        if user_input.lower() in ['yes', 'ye', 'y', 'yeah', 'yup',]:
+            continue
+        else:
+            run = False
 
 if __name__ == '__main__':
     main()
