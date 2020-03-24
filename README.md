@@ -14,7 +14,7 @@ This python script uses BeautifulSoup and Requests to collect all the words from
 OS X & Linux:
 
 ```sh
-npm install my-crazy-module --save
+git clone https://github.com/dev-mike-del/google_news_most_common_words.git
 ```
 
 <!-- Windows:
