@@ -21,15 +21,18 @@ import requests
 # https://lxml.de/installation.html
 import lxml
 
-
+# This list is to filter out any words (str) that are single letters
 alphabet_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
             'q','r','s','t','u','v','w','x','y','z']
 
+# This list is to filter out any numbers that may appear in the text
 string_numbers_list = ['0','1','2','3','4','5','6','7','8','9']
 
+# This list is to filter out and punctuation from the word_count function
 punctuation_list = ['.', ',', '!', '?', ';', ':', '"', '\'', '[', ']', '{', '}',
                '\\', '|', '=', '+', '‒', '–', '—', '―', '(', ')', '*', '~', '&']
 
+# This list is to filter out any unwanted words from the word_count function
 ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and', 
                     'are', 'as', 'at', 'be', 'but', 'by', 'can', 'could', 
                     'during', 'for', 'from', 'get', 'gets', 'has', 'have', 
@@ -38,6 +41,7 @@ ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and',
                     'takes', 'than', 'that', 'the', 'this', 'to', 'was', 
                     'will', 'what', 'when', 'with', 'who', 'why', 'won\'t',]
 
+# This lambda funciton is used to check if a word (str) is unicode
 isascii = lambda s: len(s) == len(s.encode())
 
  
@@ -58,7 +62,11 @@ def word_count():
     # the news article headline and link
     anchor = soup.findAll("a", {"class": "DY5T1d"})
 
+    # This list is for all the words (str) that appear in the text
     words_list = []
+
+    # This dictionary is for the results that are returned from the 
+    # word_count function
     results = {}
 
     # This extracts the individual anchor tags from the BeautifulSoup element 
@@ -77,8 +85,8 @@ def word_count():
             # with an empty string (that we later remove).
             elif word[-1] in punctuation_list:
                 word = word.replace(word[-1], '')
-            # This check if the word is in the ignore_word_list. If it's not,
-            # it is added to word_list.
+            # This checks if the word is in the exclution lists and if the 
+            # word is unicode. If it's not, it is added to word_list.
             if (word not in ignore_word_list and
                 word not in punctuation_list and 
                 word not in alphabet_list and 
@@ -86,6 +94,9 @@ def word_count():
                 isascii(word) == True):
                 words_list.append(word.lower())
 
+    # This loop dedupes the word list and adds each word and the number of 
+    # appearances to the results dictionary. Additionally, it adds a key 
+    # (index) as the key for each word.
     counter = 1
     for i in list(set(words_list)):
         word = max(set(words_list), key = words_list.count)
@@ -94,12 +105,12 @@ def word_count():
         counter += 1
         words_list = list(filter((word).__ne__, words_list))
 
+    # This returns the results gathered from this function
     return results
 
-
-   
 def main():
 
+    # Opening welcome statement
     print('''
 Hello and welcom to the Google News word count. 
 This program returns the word count of all the words 
@@ -109,8 +120,11 @@ Created by Michael Delgado (devmikedel@gmail.com)
 
 (Please wait for the results)''')
 
+    # This calls the word_count function and save the returned results in the 
+    # variable results
     results = word_count()
 
+    # This loop prints out each dictionary item (one per line)
     for result in results:
         print(f'{results[result]}')
 
