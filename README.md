@@ -92,7 +92,7 @@ npm test
 
 Michael Delgado – [@dev_mike_del](https://twitter.com/dbader_org) – devmikedel@gmail.com
 
-Distributed under the GNU General Public License v3.0. See ``LICENSE`` for more information.
+Distributed under the GNU General Public License v3.0. See [LICENSE](https://github.com/dev-mike-del/google_news_most_common_words/blob/master/LICENSE) for more information.
 
 [https://github.com/dev-mike-del/google_news_most_common_words](https://github.com/dev-mike-del/google_news_most_common_words)
 
