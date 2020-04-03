@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
+from datetime import datetime, timezone
+
 # Beautiful Soup is a Python library for pulling data out of HTML and XML files.
 # import the BeautifulSoup Python library according to these instructions: 
 # http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-beautiful-soup
 # use this syntax as described on the documentation page: 
 # http://www.crummy.com/software/BeautifulSoup/bs4/doc/#making-the-soup
 from bs4 import BeautifulSoup
+
+import pandas as pd
 
 # Requests is a Python HTTP library, released under the Apache License 2.0. 
 # The goal of the project is to make HTTP requests simpler and more 
@@ -44,12 +48,13 @@ ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and',
 # This lambda funciton is used to check if a word (str) is unicode
 isascii = lambda s: len(s) == len(s.encode())
 
- 
 def word_count():
     """
     This function takes a url as the argument
     and returns the most common word found in that web page
     """
+    timestamp = datetime.now(timezone.utc)
+
     # "load" a webpage 
     r = requests.get('https://news.google.com/')
 
@@ -62,12 +67,14 @@ def word_count():
     # the news article headline and link
     anchor = soup.findAll("a", {"class": "DY5T1d"})
 
+    num_of_articles = len(anchor)
+
     # This list is for all the words (str) that appear in the text
     words_list = []
 
-    # This dictionary is for the results that are returned from the 
+    # This list is for the results that are returned from the 
     # word_count function
-    results = {}
+    results = []
 
     # This extracts the individual anchor tags from the BeautifulSoup element 
     # of anchor tags
@@ -94,19 +101,28 @@ def word_count():
                 isascii(word) == True):
                 words_list.append(word.lower())
 
+    num_of_words = len(words_list)
+
     # This loop dedupes the word list and adds each word and the number of 
     # appearances to the results dictionary. Additionally, it adds a key 
     # (index) as the key for each word.
-    counter = 1
     for i in list(set(words_list)):
         word = max(set(words_list), key = words_list.count)
-        number_of_appearances =  words_list.count(word)
-        results[counter] = {'word':word, 'appearances':number_of_appearances}
-        counter += 1
+        appearances =  words_list.count(word)
+        results.append([word, appearances, num_of_words, num_of_articles, timestamp])
         words_list = list(filter((word).__ne__, words_list))
 
+    colNames = ['word',
+                'appearances',
+                'number_of_words',
+                'number_of_articles',
+                'timestamp',
+                ]
+
+    df = pd.DataFrame(data = results, columns = colNames)
+
     # This returns the results gathered from this function
-    return results
+    return df
 
 def main():
 
