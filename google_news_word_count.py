@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
+
 # Beautiful Soup is a Python library for pulling data out of HTML and XML files.
 # import the BeautifulSoup Python library according to these instructions: 
 # http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-beautiful-soup
 # use this syntax as described on the documentation page: 
 # http://www.crummy.com/software/BeautifulSoup/bs4/doc/#making-the-soup
 from bs4 import BeautifulSoup
+
+import pandas as pd
 
 # Requests is a Python HTTP library, released under the Apache License 2.0. 
 # The goal of the project is to make HTTP requests simpler and more 
@@ -20,6 +24,8 @@ import requests
 # import lxml according to these instructions:
 # https://lxml.de/installation.html
 import lxml
+
+timestamp = datetime.now()
 
 # This list is to filter out any words (str) that are single letters
 alphabet_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
