@@ -1,11 +1,11 @@
 # Google News Word Count
-> Returns a dictionary of each word and the number of times that word appears (in a headline) on Google News.
+> Returns a [Pandas](https://pandas.pydata.org/) [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) of each word, number of times that word appears, number of words, number of articles and a timestamp.
 
 <!-- [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Downloads Stats][npm-downloads]][npm-url] -->
 
-This python script uses BeautifulSoup and Requests to collect all the words from each Google news headline. It returns a dictionary of each word and the number of times that word appears (in a headline) on Google News.
+This python script uses BeautifulSoup and Requests to collect all the words from each Google news headline. It then uses Pandas to return a DataFrame of each word, number of times that word appears, number of words, number of articles and a timestamp. This project will soon provide functionality to create data visualizations using [Matplotlib](https://matplotlib.org/).
 
 ![](readme_images/screen_shot_1.png)
 
