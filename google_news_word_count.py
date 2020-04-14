@@ -119,6 +119,11 @@ def word_count():
                 'timestamp',
                 ]
 
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', -1)
+    
     df = pd.DataFrame(data = results, columns = colNames)
 
     # This returns the results gathered from this function
