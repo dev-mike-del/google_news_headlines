@@ -128,7 +128,7 @@ def main():
 
     # Opening welcome statement
     print('''
-Hello and welcom to the Google News word count. 
+Hello and welcome to the Google News word count. 
 This program returns the word count of all the words 
 found on the Google New website.
 
@@ -139,10 +139,11 @@ Created by Michael Delgado (devmikedel@gmail.com)
     # This calls the word_count function and save the returned results in the 
     # variable results
     results = word_count()
+    print(results)
 
-    # This loop prints out each dictionary item (one per line)
-    for result in results:
-        print(f'{results[result]}')
+    # # This loop prints out each dictionary item (one per line)
+    # for result in results:
+    #     print(f'{results[result]}')
 
 
 if __name__ == '__main__':
