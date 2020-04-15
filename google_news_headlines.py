@@ -72,10 +72,10 @@ class GoogleNewsHeadlines(object):
         iter_source =  iter(self.source)
         for headline in iter_source:
             org = next(iter_source)
-            results.append([self.timestamp, 
-                              headline.text, 
-                              org.text, 
-                              self.num_of_headlines])
+            results.append([headline.text, 
+                            org.text, 
+                            self.num_of_headlines,
+                            self.timestamp,])
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)
         pd.set_option('display.width', None)
@@ -90,7 +90,7 @@ class GoogleNewsHeadlines(object):
 
     def table_schema_json(self):
         df = self.pandas_dataframe()
-        df['timestamp'] = pd.to_datetime(df.timestamp.astype(str))
+        df['timestamp'] = pd.to_datetime(df.timestamp.astype(str), errors='coerce')
         return df.to_json(orient='table')
 
 
@@ -140,7 +140,55 @@ class GoogleNewsHeadlines(object):
 
 def main():
     data = GoogleNewsHeadlines()
-    print(data._as_json())
+    response = 0
+    print('''
+Welcome to the Google News Headlines project by Michael Delgado.
+
+This project gathers all Google News headlines and related news organizations.
+
+You can view the data in a few different formats. 
+
+        ''')
+
+    while response != 7:
+        print('''
+Select an option:
+[1] View data as a Python dictionary
+[2] View data as a json
+[3] View data as a Pandas DataFrame
+[4] View data as Pandas DataFrame table schema json
+[5] View word count
+[6] View word count as json
+[7] to quit program
+            ''')
+        response = input('Please enter your selection: ')
+
+        if response in ['1','2','3','4','5','6','7']:
+            if response == '1':
+                print(data._as_dict())
+            if response == '2':
+                print(data._as_json())
+            if response == '3':
+                print(data.pandas_dataframe())
+            if response == '4':
+                print(data.table_schema_json())
+            if response == '5':
+                print(data.word_count())
+            if response == '6':
+                print(data.word_count_as_json())
+            if response == '7':
+                print('''
+Thank you for using the Google News Headlines project by Michael Delgado.
+Goodbye for now!
+                    ''')
+                break
+        else:
+            print('''
+< Error: Invalid Selection >
+
+Please try again.
+                ''')
+
 
 
 if __name__ == '__main__':
