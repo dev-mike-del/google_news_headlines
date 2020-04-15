@@ -48,7 +48,7 @@ ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and',
 # This lambda funciton is used to check if a word (str) is unicode
 isascii = lambda s: len(s) == len(s.encode())
 
-def word_count():
+def google_news_headlines():
     """
     This function takes a url as the argument
     and returns the most common word found in that web page
@@ -73,7 +73,7 @@ def word_count():
     words_list = []
 
     # This list is for the results that are returned from the 
-    # word_count function
+    # google_news_headlines function
     results = []
 
     # This extracts the individual anchor tags from the BeautifulSoup element 
@@ -141,9 +141,9 @@ Created by Michael Delgado (devmikedel@gmail.com)
 
 (Please wait for the results)''')
 
-    # This calls the word_count function and save the returned results in the 
+    # This calls the google_news_headlines function and save the returned results in the 
     # variable results
-    results = word_count()
+    results = google_news_headlines()
     print(results)
 
     # # This loop prints out each dictionary item (one per line)
