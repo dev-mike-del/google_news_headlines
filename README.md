@@ -1,11 +1,12 @@
-# Google News Word Count
-> Returns a [Pandas](https://pandas.pydata.org/) [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) of each word, number of times that word appears, number of words, number of articles and a timestamp.
+# Google News Headlines
+
+>Returns all Google News headlines and related news organizations. Avaliable formates include: python dictionary, json, pandas DataFrame, pandas DataFrame as table schema json. Addtional class methods include word_count() and word_count_as_json().
 
 <!-- [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Downloads Stats][npm-downloads]][npm-url] -->
 
-This python script uses BeautifulSoup and Requests to collect all the words from each Google news headline. It then uses Pandas to return a DataFrame of each word, number of times that word appears, number of words, number of articles and a timestamp. This project will soon provide functionality to create data visualizations using [Matplotlib](https://matplotlib.org/).
+This is a python based project. The main script uses BeautifulSoup, Requests and Pandas python libraries. Once the class GoogleNewsHeadlines is instantiated, it gathers all of the Google News headlines, related organization and a python datetime timestamp.There are multiple GoogleNewsHeadlines class methods that allow you to view the data in different formats. Additionally, the class includes the word_count() and word_count_as_json() methods. These methods return each word from all the headlines combined and the number of times each word appears.
 
 ![](readme_images/screen_shot_1.png)
 
@@ -17,15 +18,10 @@ OS X & Linux:
 git clone https://github.com/dev-mike-del/google_news_most_common_words.git
 ```
 
-<!-- Windows:
-
-```sh
-edit autoexec.bat
-``` -->
 
 ## Usage example
 
-Everytime this script is executed, it creates a new results list.
+Every time this script is executed, it creates a new results list.
 
 1. Create a python virtual environment. For this example, I am using [Virtualenv](https://virtualenv.pypa.io/en/latest).
 ```sh
