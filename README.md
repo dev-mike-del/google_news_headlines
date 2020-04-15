@@ -8,6 +8,8 @@
 
 This is a python based project. The main script uses BeautifulSoup, Requests and Pandas python libraries. Once the class GoogleNewsHeadlines is instantiated, it gathers all of the Google News headlines, related organization and a python datetime timestamp.There are multiple GoogleNewsHeadlines class methods that allow you to view the data in different formats. Additionally, the class includes the word_count() and word_count_as_json() methods. These methods return each word from all the headlines combined and the number of times each word appears.
 
+You can run the google_news_headlines.py file in your terminal and interact with the program terminal interface or you can import the class GoogleNewsHeadlines and use it in a Python REPL or in your own code. Continue reading to find out how.
+
 ![](readme_images/screen_shot_1.png)
 
 ## Installation
