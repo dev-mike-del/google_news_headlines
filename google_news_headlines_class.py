@@ -46,7 +46,8 @@ class GoogleNewsHeadlines(object):
 
         # This lambda funciton is used to check if a word (str) is unicode
         self.isascii = lambda s: len(s) == len(s.encode())
-        
+
+        self.num_of_headlines = len(self.source) / 2
 
 
     def _as_dict(self):
@@ -56,22 +57,28 @@ class GoogleNewsHeadlines(object):
 
         for headlines in iter_source:
             org = next(iter_source)
-            results[index] = (self.timestamp, headlines.text, org.text)
+            results[index] = (self.timestamp, headlines.text, org.text, self.num_of_headlines)
             index += 1
 
         return results
 
 
+    def _as_json(self):
+        return json.dumps(self._as_dict(), 
+                          indent=4, 
+                          sort_keys=True, 
+                          default=str)
+
+
     def _as_pandas_dataframe(self):
         results = []
         iter_source =  iter(self.source)
-        num_of_headlines = len(self.source) / 2
         for headline in iter_source:
             org = next(iter_source)
             results.append([self.timestamp, 
                               headline.text, 
                               org.text, 
-                              num_of_headlines])
+                              self.num_of_headlines])
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)
         pd.set_option('display.width', None)
@@ -83,6 +90,11 @@ class GoogleNewsHeadlines(object):
                     ]
         df = pd.DataFrame(data = results, columns = colNames)
         return df
+
+    def _as_table_schema_json(self):
+        df = self._as_pandas_dataframe()
+        df['timestamp'] = pd.to_datetime(df.timestamp.astype(str))
+        return df.to_json(orient='table')
 
 
     def word_count(self):
@@ -127,7 +139,7 @@ class GoogleNewsHeadlines(object):
 
 def main():
     data = GoogleNewsHeadlines()
-    print(data._as_pandas_dataframe())
+    print(data._as_json())
 
 
 if __name__ == '__main__':
