@@ -57,17 +57,14 @@ class GoogleNewsHeadlines(object):
 
         for headlines in iter_source:
             org = next(iter_source)
-            results[index] = (self.timestamp, headlines.text, org.text, self.num_of_headlines)
+            results[index] = (headlines.text, org.text, self.num_of_headlines, self.timestamp,)
             index += 1
 
         return results
 
 
     def _as_json(self):
-        return json.dumps(self._as_dict(), 
-                          indent=4, 
-                          sort_keys=True, 
-                          default=str)
+        return json.dumps(self._as_dict(),default=str)
 
 
     def _as_pandas_dataframe(self):
@@ -83,10 +80,10 @@ class GoogleNewsHeadlines(object):
         pd.set_option('display.max_columns', None)
         pd.set_option('display.width', None)
         pd.set_option('display.max_colwidth', None)
-        colNames = ['timestamp',
-                    'headline',
+        colNames = ['headline',
                     'organization',
                     'number_of_headlines',
+                    'timestamp',
                     ]
         df = pd.DataFrame(data = results, columns = colNames)
         return df
@@ -120,11 +117,15 @@ class GoogleNewsHeadlines(object):
                 clean_words_list.append(word.lower())
 
 
+        num_of_words = len(clean_words_list)
         for i in list(set(clean_words_list)):
             word = max(set(clean_words_list), 
                 key = clean_words_list.count)
             appearances =  clean_words_list.count(word)
-            results[index] = {'word': word, 'appearances': appearances}
+            results[index] = {'word': word, 
+                              'appearances': appearances,
+                              'number_of_words': num_of_words,
+                              'timestamp': self.timestamp}
             clean_words_list = list(
                 filter((word).__ne__, clean_words_list))
             index += 1
@@ -133,7 +134,7 @@ class GoogleNewsHeadlines(object):
 
 
     def word_count_as_json(self):
-        return json.dumps(self.word_count())
+        return json.dumps(self.word_count(), default=str)
         
 
 
