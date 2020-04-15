@@ -67,7 +67,7 @@ class GoogleNewsHeadlines(object):
         return json.dumps(self._as_dict(),default=str)
 
 
-    def _as_pandas_dataframe(self):
+    def pandas_dataframe(self):
         results = []
         iter_source =  iter(self.source)
         for headline in iter_source:
@@ -88,8 +88,8 @@ class GoogleNewsHeadlines(object):
         df = pd.DataFrame(data = results, columns = colNames)
         return df
 
-    def _as_table_schema_json(self):
-        df = self._as_pandas_dataframe()
+    def table_schema_json(self):
+        df = self.pandas_dataframe()
         df['timestamp'] = pd.to_datetime(df.timestamp.astype(str))
         return df.to_json(orient='table')
 
