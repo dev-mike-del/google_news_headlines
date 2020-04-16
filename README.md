@@ -23,8 +23,6 @@ git clone https://github.com/dev-mike-del/google_news_most_common_words.git
 
 ## Usage example
 
-Every time this script is executed, it creates a new results list.
-
 1. Create a python virtual environment. For this example, I am using [Virtualenv](https://virtualenv.pypa.io/en/latest).
 ```sh
 virtualenv -p python3 your_virtualenv_name
@@ -39,26 +37,11 @@ pip install -r requirements.txt
 ```
 4. Run google_news_word_count.py.
 ```sh
-python google_news_word_count.py
+python google_news_headlines.py
 ```
-5. View the results in the terminal.
-```sh
-{'word': 'coronavirus', 'appearances': 76}
-{'word': 'us', 'appearances': 19}
-{'word': 'trump', 'appearances': 14}
-{'word': 'pandemic', 'appearances': 12}
-{'word': 'aid', 'appearances': 8}
-{'word': 'release', 'appearances': 8}
-{'word': 'stimulus', 'appearances': 7}
-{'word': 'up', 'appearances': 7}
-{'word': 'live', 'appearances': 7}
-{'word': 'microsoft', 'appearances': 6}
-{'word': 'lockdown', 'appearances': 6}
-{'word': 'windows', 'appearances': 6}
-{'word': 'health', 'appearances': 6}
-{'word': 'home', 'appearances': 6}
-{'word': '2020', 'appearances': 6}
-```
+
+5. View the options in the terminal.
+![](readme_images/screen_shot_2.png)
 
 <!-- _For more examples and usage, please refer to the [Wiki][wiki]._ -->
 
