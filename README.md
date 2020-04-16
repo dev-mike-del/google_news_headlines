@@ -23,18 +23,23 @@ git clone https://github.com/dev-mike-del/google_news_most_common_words.git
 
 ## Usage example
 
+*Running the script in your terminal*
+
 1. Create a python virtual environment. For this example, I am using [Virtualenv](https://virtualenv.pypa.io/en/latest).
 ```sh
 virtualenv -p python3 your_virtualenv_name
 ```
+
 2. Activate the python virtual environment
 ```sh
 source your_virtualenv_name/bin/activate
 ```
+
 3. Install the packages listed in requirements.txt.
 ```sh
 pip install -r requirements.txt
 ```
+
 4. Run google_news_word_count.py.
 ```sh
 python google_news_headlines.py
@@ -42,6 +47,12 @@ python google_news_headlines.py
 
 5. View the options in the terminal.
 ![](readme_images/screen_shot_2.png)
+
+6. Enter the corresponding number for your selection and click return (or enter)
+![](readme_images/screen_shot_3.png)
+
+7. View the results.
+![](readme_images/screen_shot_4.png)
 
 <!-- _For more examples and usage, please refer to the [Wiki][wiki]._ -->
 
@@ -79,7 +90,7 @@ Distributed under the GNU General Public License v3.0. See [LICENSE](https://git
 
 ## Contributing
 
-1. Fork it (<https://github.com/dev-mike-del/google_news_most_common_words/fork>)
+1. Fork it (<https://github.com/dev-mike-del/google_news_headlines/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
