@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import csv
 from datetime import datetime, timezone
 import itertools
 import json
