@@ -51,21 +51,20 @@ class GoogleNewsHeadlines(object):
         self.num_of_headlines = len(self.source) / 2
 
 
-    def _as_dict(self):
-        results = {}
-        index = 0
-        iter_source =  iter(self.source)
-
-        for headlines in iter_source:
-            org = next(iter_source)
-            results[index] = (headlines.text, org.text, self.num_of_headlines, self.timestamp,)
-            index += 1
-
-        return results
-
-
-    def _as_json(self):
-        return json.dumps(self._as_dict(),default=str)
+    def _clean_word_list(self, word_list):
+        clean_word_list = []
+        for word in word_list:
+            if word[0] in self.punctuation_list:
+                word = word.replace(word[0], '')
+            elif word[-1] in self.punctuation_list:
+                word = word.replace(word[-1], '')
+            if (word not in self.ignore_word_list and
+                word not in self.punctuation_list and
+                word not in self.alphabet_list and 
+                word not in self.string_numbers_list and
+                self.isascii(word) == True):
+                clean_word_list.append(word.lower())
+        return clean_word_list
 
 
     def pandas_dataframe(self):
@@ -89,58 +88,81 @@ class GoogleNewsHeadlines(object):
         df = pd.DataFrame(data = results, columns = colNames)
         return df
 
-    def table_schema_json(self):
+
+    def pd_as_dict(self):
+        df = self.pandas_dataframe()
+        return df.to_dict(orient='index')
+
+
+    def pd_as_json(self):
+        df = self.pandas_dataframe()
+        df = df.rename(columns={'timestamp': 'unix_timestamp'})
+        return df.to_json(orient='index')
+
+
+    def pd_as_table_schema_json(self):
         df = self.pandas_dataframe()
         df['timestamp'] = pd.to_datetime(df.timestamp.astype(str), errors='coerce')
+        df = df.rename(columns={'timestamp': 'pandas_timestamp'})
         return df.to_json(orient='table')
 
 
-    def word_count(self):
-        source = self._as_dict()
-        results = {}
-        index = 0
-        clean_words_list = []
-
-        raw_words_list = [headline[1][1].split() for headline in source.items()]
-        words_list = list(itertools.chain.from_iterable(raw_words_list))
-        lowercased_words_list = [headline.lower() for headline in words_list]
-
-        for word in lowercased_words_list:
-            if word[0] in self.punctuation_list:
-                word = word.replace(word[0], '')
-            elif word[-1] in self.punctuation_list:
-                word = word.replace(word[-1], '')
-            if (word not in self.ignore_word_list and
-                word not in self.punctuation_list and
-                word not in self.alphabet_list and 
-                word not in self.string_numbers_list and
-                self.isascii(word) == True):
-                clean_words_list.append(word.lower())
+    def pd_to_csv(self):
+        data_dict = self.pandas_dataframe()
+        data_dict.to_csv('google_news_headlines.csv', index=False)
 
 
-        num_of_words = len(clean_words_list)
-        for i in list(set(clean_words_list)):
-            word = max(set(clean_words_list), 
-                key = clean_words_list.count)
-            appearances =  clean_words_list.count(word)
-            results[index] = {'word': word, 
-                              'appearances': appearances,
-                              'number_of_words': num_of_words,
-                              'timestamp': self.timestamp}
-            clean_words_list = list(
-                filter((word).__ne__, clean_words_list))
-            index += 1
+    def pd_word_count(self):
+        df = self.pandas_dataframe()
+        word_list = [x.lower().split() for x in df['headline']]
+        word_list = list(itertools.chain.from_iterable(word_list))
+        word_list = self._clean_word_list(word_list)
 
-        return results
+        colNames = ['word']
+        df = pd.DataFrame(data = word_list, columns = colNames)
+        df = df.dropna(subset=['word'])
+
+        new_list = []
+        word_count = df.shape[0]
+        x = 1
+        while x <= df.shape[0]:
+            word = df['word'].value_counts().idxmax()
+            count = df['word'].value_counts().max()
+            new_list.append([word, count, self.timestamp, word_count])
+            df = df[df.word != word]
+            x += 1
+            
+        colNames = ['word','count','timestamp','word_count']
+        return pd.DataFrame(data = new_list, columns = colNames)
 
 
-    def word_count_as_json(self):
-        return json.dumps(self.word_count(), default=str)
+    def pd_word_count_as_dict(self):
+        df = self.pd_word_count()
+        return df.to_dict(orient='index')
+
+
+    def pd_word_count_as_json(self):
+        df = self.pd_word_count()
+        df = df.rename(columns={'timestamp': 'unix_timestamp'})
+        return df.to_json(orient='index')
+
+
+    def pd_word_count_as_table_schema_json(self):
+        df = self.pd_word_count()
+        df['timestamp'] = pd.to_datetime(df.timestamp.astype(str), errors='coerce')
+        df = df.rename(columns={'timestamp': 'pandas_timestamp'})
+        return df.to_json(orient='table')
+
+
+    def pd_word_count_to_csv(self):
+        data_dict = self.pd_word_count()
+        data_dict.to_csv('google_news_headlines_word_count.csv', index=False)
         
 
 
 def main():
     data = GoogleNewsHeadlines()
+    data.data_to_csv()
     response = 0
     print('''
 Welcome to the Google News Headlines project by Michael Delgado.
@@ -150,17 +172,23 @@ This project gathers all Google News headlines and related news organizations.
 You can view the data in a few different formats. 
 
         ''')
-
+pd_as_table_schema_json
     while response != 7:
         print('''
 Select an option:
-[1] View data as a Python dictionary
-[2] View data as a json
-[3] View data as a Pandas DataFrame
-[4] View data as Pandas DataFrame table schema json
-[5] View word count
-[6] View word count as json
-[7] to quit program
+[1] View data as a Pandas Dataframe
+[2] View Pandas Dataframe as a Python dictionary
+[3] View Pandas Dataframe as a JSON
+[4] View Pandas DataFrame as table schema json
+[5] View Pandas DataFrame Word Count
+[6] View Pandas Dataframe Word Count as a Python dictionary
+[7] View Pandas Dataframe Word Count as a JSON
+[8] View Pandas DataFrame Word Count as table schema json
+
+[9] Save Pandas Dataframe to csv 
+[10] Save Pandas Dataframe Word Count to csv
+
+[11] Exit program
             ''')
         response = input('Please enter your selection: ')
 
