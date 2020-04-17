@@ -162,7 +162,6 @@ class GoogleNewsHeadlines(object):
 
 def main():
     data = GoogleNewsHeadlines()
-    data.data_to_csv()
     response = 0
     print('''
 Welcome to the Google News Headlines project by Michael Delgado.
@@ -173,7 +172,7 @@ You can view the data in a few different formats.
 
         ''')
 pd_as_table_schema_json
-    while response != 7:
+    while response != 11:
         print('''
 Select an option:
 [1] View data as a Pandas Dataframe
@@ -194,18 +193,26 @@ Select an option:
 
         if response in ['1','2','3','4','5','6','7']:
             if response == '1':
-                print(data._as_dict())
-            if response == '2':
-                print(data._as_json())
-            if response == '3':
                 print(data.pandas_dataframe())
+            if response == '2':
+                print(data.pd_as_dict())
+            if response == '3':
+                print(data.pd_as_json())
             if response == '4':
-                print(data.table_schema_json())
+                print(data.pd_as_table_schema_json())
             if response == '5':
-                print(data.word_count())
+                print(data.pd_word_count())
             if response == '6':
-                print(data.word_count_as_json())
+                print(data.pd_word_count_as_dict())
             if response == '7':
+                print(data.pd_word_count_as_json())
+            if response == '8':
+                print(data.pd_word_count_as_table_schema_json())
+            if response == '9':
+                print(data.pd_to_csv())
+            if response == '10':
+                print(data.pd_word_count_to_csv())
+            if response == '11':
                 print('''
 Thank you for using the Google News Headlines project by Michael Delgado.
 Goodbye for now!
