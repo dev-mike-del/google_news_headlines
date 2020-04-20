@@ -18,38 +18,43 @@ import lxml
 
 
 class GoogleNewsHeadlines(object):
-    """docstring for GoogleNewsHeadlines"""
+    """The GoogleNewsHeadlines class creates and object by collecting the news
+    headlines found on www.news.google.com. The methods provide different
+    formates to view the data"""
+
+    # This list is to filter out any words (str) that are single letters
+    alphabet_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
+                'q','r','s','t','u','v','w','x','y','z']
+
+    # This list is to filter out any numbers that may appear in the text
+    string_numbers_list = ['0','1','2','3','4','5','6','7','8','9']
+
+    # This list is to filter out and punctuation from the word_count function
+    punctuation_list = ['.', ',', '!', '?', ';', ':', '"', '\'', '[', ']', '{', '}',
+                   '\\', '|', '=', '+', '‒', '–', '—', '―', '(', ')', '*', '~', '&']
+
+    # This list is to filter out any unwanted words from the word_count function
+    ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and', 
+                        'are', 'as', 'at', 'be', 'but', 'by', 'can', 'could', 
+                        'during', 'for', 'from', 'get', 'gets', 'has', 'have', 
+                        'he', 'his', 'how', 'if', 'in', 'is', 'it', 'it\'s', 
+                        'new', 'news', 'not', 'of', 'on', 'or', 'out', 'says', 
+                        'takes', 'than', 'that', 'the', 'this', 'to', 'was', 
+                        'will', 'what', 'when', 'with', 'who', 'why', 'won\'t',]
+
+    # This lambda funciton is used to check if a word (str) is unicode
+    isascii = lambda self, s: len(s) == len(s.encode())
+
+
+    #  __init__ uses Requests and BeautifulSoup to collect all of the google
+    #  news headlines 
     def __init__(self):
         super(GoogleNewsHeadlines, self).__init__()
         r = requests.get('https://news.google.com/')
         soup = BeautifulSoup(r.text, 'lxml')
         self.source = soup.findAll(True, {'class':['DY5T1d', 'wEwyrc']})
         self.timestamp = datetime.now(timezone.utc)
-        # This list is to filter out any words (str) that are single letters
-        self.alphabet_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
-                    'q','r','s','t','u','v','w','x','y','z']
-
-        # This list is to filter out any numbers that may appear in the text
-        self.string_numbers_list = ['0','1','2','3','4','5','6','7','8','9']
-
-        # This list is to filter out and punctuation from the word_count function
-        self.punctuation_list = ['.', ',', '!', '?', ';', ':', '"', '\'', '[', ']', '{', '}',
-                       '\\', '|', '=', '+', '‒', '–', '—', '―', '(', ')', '*', '~', '&']
-
-        # This list is to filter out any unwanted words from the word_count function
-        self.ignore_word_list = ['', 'a', 'about', 'after', 'all', 'amid', 'an', 'and', 
-                            'are', 'as', 'at', 'be', 'but', 'by', 'can', 'could', 
-                            'during', 'for', 'from', 'get', 'gets', 'has', 'have', 
-                            'he', 'his', 'how', 'if', 'in', 'is', 'it', 'it\'s', 
-                            'new', 'news', 'not', 'of', 'on', 'or', 'out', 'says', 
-                            'takes', 'than', 'that', 'the', 'this', 'to', 'was', 
-                            'will', 'what', 'when', 'with', 'who', 'why', 'won\'t',]
-
-        # This lambda funciton is used to check if a word (str) is unicode
-        self.isascii = lambda s: len(s) == len(s.encode())
-
-        self.num_of_headlines = len(self.source) / 2
-
+        
 
     def _clean_word_list(self, word_list):
         clean_word_list = []
@@ -70,11 +75,12 @@ class GoogleNewsHeadlines(object):
     def pandas_dataframe(self):
         results = []
         iter_source =  iter(self.source)
+        num_of_headlines = len(self.source) / 2
         for headline in iter_source:
             org = next(iter_source)
             results.append([headline.text, 
                             org.text, 
-                            self.num_of_headlines,
+                            num_of_headlines,
                             self.timestamp,])
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)
@@ -171,7 +177,6 @@ This project gathers all Google News headlines and related news organizations.
 You can view the data in a few different formats. 
 
         ''')
-pd_as_table_schema_json
     while response != 11:
         print('''
 Select an option:
@@ -191,7 +196,7 @@ Select an option:
             ''')
         response = input('Please enter your selection: ')
 
-        if response in ['1','2','3','4','5','6','7']:
+        if response in ['1','2','3','4','5','6','7','8','9','10','11']:
             if response == '1':
                 print(data.pandas_dataframe())
             if response == '2':
