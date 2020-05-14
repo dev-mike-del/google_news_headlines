@@ -86,10 +86,10 @@ class GoogleNewsHeadlines(object):
         pd.set_option('display.max_columns', None)
         pd.set_option('display.width', None)
         pd.set_option('display.max_colwidth', None)
-        colNames = ['headline',
+        colNames = ['title',
                     'organization',
-                    'number_of_headlines',
-                    'timestamp',
+                    'count',
+                    'ts',
                     ]
         df = pd.DataFrame(data = results, columns = colNames)
         return df
@@ -234,4 +234,5 @@ Please try again.
 
 if __name__ == '__main__':
     main()
+
 
